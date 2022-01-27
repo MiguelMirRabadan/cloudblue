@@ -27,8 +27,7 @@ public class CallController {
     private ServerProperties serverProperties;
 
     private ConcurrentHashMap<String, Integer> chmap = new ConcurrentHashMap<String, Integer>();
-
-    final int maxCalls = 2;
+    private final int maxCalls = 50;
 
     @RequestMapping(value = "/api/checkip", method = RequestMethod.GET)
     public ResponseEntity<String>  checkip() {
@@ -41,7 +40,7 @@ public class CallController {
 
         if(chmap.get(call.getIp())<=maxCalls && chmap.get(call.getIp())!=0){
             chmap.computeIfPresent(call.getIp(), (key, oldValue) -> oldValue -1);
-            return ResponseEntity.status(HttpStatus.OK).body(call.getIp() + ""+ chmap.get(call.getIp()));
+            return ResponseEntity.status(HttpStatus.OK).body("");//+ " - attempts:"+ chmap.get(call.getIp()));
         }
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("");
     }
